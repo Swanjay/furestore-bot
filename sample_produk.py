@@ -1,39 +1,90 @@
 #!/usr/bin/env python3
-"""
-Sample produk untuk Furestore.
-Jalankan: python3 sample_produk.py
-"""
-
-import asyncio
+"""Sample produk digital untuk Furestore"""
+import asyncio, sys
+sys.path.insert(0, '/home/ubuntu/toko-bot')
 import database as db
 
-SAMPLE_PRODUK = [
-    # Fashion
-    {"kode": "kaos_001", "nama": "Kaos Polos Premium", "harga": 59900, "stok": 50, "kategori": "Fashion", "deskripsi": "Kaos polos bahan cotton combed 30s. Nyaman dipakai sehari-hari. Tersedia warna hitam & putih."},
-    {"kode": "kaos_002", "nama": "Kaos Oversize Sablon", "harga": 79900, "stok": 35, "kategori": "Fashion", "deskripsi": "Kaos oversize dengan sablon design aesthetic. Bahan tebal, cocok buat OOTD harian."},
-    {"kode": "hoodie_001", "nama": "Hoodie Non-Zipper", "harga": 149000, "stok": 20, "kategori": "Fashion", "deskripsi": "Hoodie non-zipper bahan fleece premium. Hangat, nyaman, cocok buat santai."},
-    {"kode": "kemeja_001", "nama": "Kemeja Flanel Kotak", "harga": 99900, "stok": 25, "kategori": "Fashion", "deskripsi": "Kemeja flanel motif kotak-kotak. Bahan lembut, cocok buat gaya kasual."},
+PRODUK = [
+    # Akun Premium
+    {"kode": "netflix_001", "nama": "Netflix Premium", "harga": 25000, "kategori": "Akun Premium", "deskripsi": "Akun Netflix Premium. Tonton semua series & film. Durasi: 30 hari."},
+    {"kode": "spotify_001", "nama": "Spotify Premium", "harga": 15000, "kategori": "Akun Premium", "deskripsi": "Spotify Premium individual. Musik tanpa iklan. Durasi: 30 hari."},
+    {"kode": "canva_001", "nama": "Canva Pro", "harga": 18000, "kategori": "Akun Premium", "deskripsi": "Canva Pro 1 bulan. Semua fitur premium + template pro."},
+    {"kode": "chatgpt_001", "nama": "ChatGPT Plus", "harga": 35000, "kategori": "Akun Premium", "deskripsi": "ChatGPT Plus. GPT-4, DALL-E, browsing. 1 akun share."},
+    {"kode": "capcut_001", "nama": "CapCut Pro", "harga": 12000, "kategori": "Akun Premium", "deskripsi": "CapCut Pro. Editing video tanpa watermark. 30 hari."},
+    
+    # Token & Voucher
+    {"kode": "token_pln", "nama": "Token PLN", "harga": 20000, "kategori": "Token & Voucher", "deskripsi": "Token listrik PLN Rp20.000. Masukkan nomor meter setelah pembelian."},
+    {"kode": "voucher_gopay", "nama": "Voucher GoPay", "harga": 50000, "kategori": "Token & Voucher", "deskripsi": "Voucher GoPay Rp50.000. Langsung masuk akun GoPay."},
+    {"kode": "pulsa_telkomsel", "nama": "Pulsa Telkomsel 50k", "harga": 52000, "kategori": "Token & Voucher", "deskripsi": "Pulsa Telkomsel Rp50.000. Langsung masuk. Kirim nomor HP setelah beli."},
+    
+    # Langganan
+    {"kode": "youtube_prem", "nama": "YouTube Premium", "harga": 20000, "kategori": "Langganan", "deskripsi": "YouTube Premium. Tanpa iklan + YouTube Music. 30 hari."},
+    {"kode": "viu_prem", "nama": "Viu Premium", "harga": 10000, "kategori": "Langganan", "deskripsi": "Viu Premium. Drama Korea & konten Asia. 30 hari."},
+    {"kode": "wetv_prem", "nama": "WeTV VIP", "harga": 12000, "kategori": "Langganan", "deskripsi": "WeTV VIP. Drama China & anime. 30 hari."},
+]
 
-    # Aksesoris
-    {"kode": "topi_001", "nama": "Topi Trucker Cap", "harga": 39900, "stok": 40, "kategori": "Aksesoris", "deskripsi": "Topi trucker dengan jaring di belakang. Model kekinian, adjustable."},
-    {"kode": "tas_001", "nama": "Tas Selempang Kecil", "harga": 89900, "stok": 15, "kategori": "Aksesoris", "deskripsi": "Tas selempang kecil bahan kanvas. Muat HP, dompet, dan kunci. Cocok jalan-jalan."},
-    {"kode": "dompet_001", "nama": "Dompet Kecil Minimalis", "harga": 49900, "stok": 30, "kategori": "Aksesoris", "deskripsi": "Dompet kecil dengan banyak slot kartu. Praktis dan elegan."},
-
-    # Elektronik
-    {"kode": "earphone_001", "nama": "TWS Bluetooth", "harga": 79000, "stok": 25, "kategori": "Elektronik", "deskripsi": "Earphone TWS dengan suara jernih. Tahan 4 jam pemakaian. Charging case included."},
-    {"kode": "kabel_001", "nama": "Kabel Data USB-C", "harga": 25000, "stok": 60, "kategori": "Elektronik", "deskripsi": "Kabel data USB-C fast charging. Panjang 1 meter. Awet dan kuat."},
-    {"kode": "charger_001", "nama": "Charger 18W Fast Charge", "harga": 55000, "stok": 30, "kategori": "Elektronik", "deskripsi": "Charger fast charging 18W. Cocok untuk semua HP Android & iPhone."},
+STOK = [
+    # Netflix
+    ("netflix_001", "netflix1@gmail.com:nflx2024!"),
+    ("netflix_001", "netflix2@gmail.com:nflx2024!"),
+    ("netflix_001", "netflix3@gmail.com:nflx2024!"),
+    # Spotify
+    ("spotify_001", "spotify1@gmail.com:spot123"),
+    ("spotify_001", "spotify2@gmail.com:spot123"),
+    # Canva
+    ("canva_001", "canva1@gmail.com:canva456"),
+    ("canva_001", "canva2@gmail.com:canva456"),
+    # ChatGPT
+    ("chatgpt_001", "chatgpt1@gmail.com:gpt789"),
+    # CapCut
+    ("capcut_001", "capcut1@gmail.com:capcut321"),
+    ("capcut_001", "capcut2@gmail.com:capcut321"),
+    # Token
+    ("token_pln", "5678901234567890"),
+    ("token_pln", "5678901234567891"),
+    ("token_pln", "5678901234567892"),
+    # GoPay
+    ("voucher_gopay", "GOV-ABCD-1234-EFGH"),
+    ("voucher_gopay", "GOV-IJKL-5678-MNOP"),
+    # Pulsa
+    ("pulsa_telkomsel", "081234567890"),
+    ("pulsa_telkomsel", "085678901234"),
+    # YouTube
+    ("youtube_prem", "yt1@gmail.com:yt123"),
+    ("youtube_prem", "yt2@gmail.com:yt123"),
+    # Viu
+    ("viu_prem", "viu1@gmail.com:viu456"),
+    # WeTV
+    ("wetv_prem", "wetv1@gmail.com:wetv789"),
 ]
 
 async def main():
     await db.init_db()
-    
-    for p in SAMPLE_PRODUK:
+    for p in PRODUK:
         await db.tambah_produk(**p)
-        print(f"✅ {p['nama']} — Rp{p['harga']:,}")
+        print(f"✅ {p['nama']} — {rp(p['harga'])}")
     
-    print(f"\n🎉 {len(SAMPLE_PRODUK)} produk Furestore berhasil ditambahkan!")
-    print("Jalankan bot: python3 bot.py")
+    semua = await db.get_produk()
+    stok_map = {}
+    for s in STOK:
+        kode, isi = s
+        for p in semua:
+            if p['kode'] == kode:
+                if p['id'] not in stok_map:
+                    stok_map[p['id']] = []
+                stok_map[p['id']].append(isi)
+                break
+    
+    total = 0
+    for pid, items in stok_map.items():
+        n = await db.tambah_stok(pid, items)
+        total += n
+    
+    print(f"\n🎉 {len(PRODUK)} produk + {total} stok ditambahkan!")
+    print("Jalankan: python3 bot.py")
+
+def rp(angka):
+    return f"Rp{angka:,.0f}".replace(",", ".")
 
 if __name__ == "__main__":
     asyncio.run(main())

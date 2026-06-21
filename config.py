@@ -1,26 +1,36 @@
 """
-Config FureStore Bot
-Baca dari environment variables (untuk Railway/VPS)
+Config FureStore Bot — Digital Store
 """
 import os
+from pathlib import Path
 
-# ===== BOT TELEGRAM =====
-BOT_TOKEN = os.getenv("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
+# Load .env
+env_path = Path(__file__).parent / ".env"
+if env_path.exists():
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                os.environ[k.strip()] = v.strip()
+
+# ===== BOT =====
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 
 # ===== ADMIN =====
-admin_ids_str = os.getenv("ADMIN_IDS", "831794275")
-ADMIN_IDS = [int(x.strip()) for x in admin_ids_str.split(",")]
+ADMIN_IDS = [831794275]
 
-# ===== INFO TOKO =====
-TOKO_NAMA = os.getenv("TOKO_NAMA", "Furestore")
-TOKO_DESC = os.getenv("TOKO_DESC", "Toko online terpercaya, murah meriah! 🛍️")
-TOKO_SAPAAN = os.getenv("TOKO_SAPAAN", "Kak")
-
-# ===== PENGIRIMAN =====
-GRATIS_ONGKIR_MIN = int(os.getenv("GRATIS_ONGKIR_MIN", "80000"))
-ONGKIR_DEFAULT = int(os.getenv("ONGKIR_DEFAULT", "12000"))
+# ===== TOKO =====
+TOKO_NAMA = "Furestore"
+TOKO_DESC = "Jual akun, token & langganan premium!"
+TOKO_SAPAAN = "Kak"
 
 # ===== PEMBAYARAN =====
-REKENING = {
-    "DANA": os.getenv("REKENING_DANA", "085600650481 a/n Furestore"),
+PEMBAYARAN = {
+    "DANA": "085600650481",
+    "OVO": "085600650481",
+    "GOPAY": "085600650481",
+    "QRIS": "https://linkaja.example.com/qr/furestore",
 }
+
+ADMIN_USERNAME = "@furestore_admin"
