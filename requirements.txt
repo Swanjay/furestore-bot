@@ -1,0 +1,2 @@
+python-telegram-bot[aiohttp]>=21.0
+aiosqlite>=0.20.0
