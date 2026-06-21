@@ -1,0 +1,8 @@
+# Railway.app Deployment for FureStore Bot
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "python3 bot.py"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
